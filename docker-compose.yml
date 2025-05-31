@@ -1,6 +1,6 @@
 services:
   db:
-    build: .
+    image: postgres:16-alpine 
     restart: always           
     environment:
       POSTGRES_DB: mydatabase     
@@ -10,13 +10,12 @@ services:
       - "5432:5432"           
     volumes:
       - pgdata:/var/lib/postgresql/data 
-      - ./scripts/01_create_tables.sql:/docker-entrypoint-initdb.d/01_create_tables.sql
-      - ./scripts/03_fill_tables_w_mock.sql:/docker-entrypoint-initdb.d/03_fill_tables_w_mock.sql
-      - ./scripts/04_tables_analysis.sql:/docker-entrypoint-initdb.d/04_tables_analysis.sql
+      - ./scripts:/docker-entrypoint-initdb.d/
+      - ./data_csv_for_docker:/data_csv_for_docker
     healthcheck: 
       test: ["CMD-SHELL", "pg_isready -U user_bd -d mydatabase"]
       interval: 5s
       timeout: 5s
       retries: 5
 volumes:
-  pgdata:
+  pgdata: 
