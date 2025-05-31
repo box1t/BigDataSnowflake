@@ -1,4 +1,4 @@
-
+-- scripts/03_fill_tables_w_mock.sql
 ----------------------------------------
 
 INSERT INTO DimCustomers (
@@ -24,11 +24,9 @@ SELECT DISTINCT
     customer_pet_breed
 FROM
     mock_data
-ON CONFLICT (customer_email) DO NOTHING; -- Чтобы избежать ошибок, если email уже существует (хотя при TRUNCATE это не должно произойти)
+ON CONFLICT (customer_email) DO NOTHING;
 
--- Проверка
-SELECT COUNT(*) FROM DimCustomers;
-SELECT * FROM DimCustomers LIMIT 10;
+
 ----------------------------------------
 
 INSERT INTO DimSellers (
@@ -48,9 +46,7 @@ FROM
     mock_data
 ON CONFLICT (seller_email) DO NOTHING;
 
--- Проверка
-SELECT COUNT(*) FROM DimSellers;
-SELECT * FROM DimSellers LIMIT 10;
+
 ----------------------------------------
 
 INSERT INTO DimProducts (
@@ -89,9 +85,7 @@ FROM
 WHERE product_name IS NOT NULL
 ORDER BY product_name;
 
--- Проверка
-SELECT COUNT(*) FROM DimProducts;
-SELECT * FROM DimProducts LIMIT 10;
+
 ----------------------------------------
 
 INSERT INTO DimStores (
@@ -116,9 +110,7 @@ FROM
 WHERE store_name IS NOT NULL
 ON CONFLICT (store_name) DO NOTHING;
 
--- Проверка
-SELECT COUNT(*) FROM DimStores;
-SELECT * FROM DimStores LIMIT 10;
+
 ----------------------------------------
 
 INSERT INTO DimSuppliers (
@@ -143,9 +135,7 @@ FROM
 WHERE supplier_name IS NOT NULL
 ON CONFLICT (supplier_name) DO NOTHING;
 
--- Проверка
-SELECT COUNT(*) FROM DimSuppliers;
-SELECT * FROM DimSuppliers LIMIT 10;
+
 ----------------------------------------
 INSERT INTO DimDate (
     date_sk,
@@ -178,9 +168,7 @@ WHERE
     md.sale_date IS NOT NULL
 ON CONFLICT (full_date) DO NOTHING;
 
--- Проверка
-SELECT COUNT(*) FROM DimDate;
-SELECT * FROM DimDate ORDER BY full_date LIMIT 10;
+
 ----------------------------------------
 INSERT INTO FactSales (
     customer_sk,
@@ -216,25 +204,5 @@ LEFT JOIN
 JOIN
     DimDate dd ON md.sale_date::DATE = dd.full_date;
 
--- Проверка (можно выполнить сразу после INSERT)
-SELECT COUNT(*) FROM FactSales;
-SELECT * FROM FactSales LIMIT 10;
-
--- Проверка
-SELECT COUNT(*) FROM FactSales;
-SELECT * FROM FactSales LIMIT 10;
-
--- Доп проверки
-SELECT COUNT(md.*)
-FROM mock_data md
-LEFT JOIN DimCustomers dc ON md.customer_email = dc.customer_email
-LEFT JOIN DimSellers ds ON md.seller_email = ds.seller_email;
-
-
-SELECT COUNT(md.*)
-FROM mock_data md
-LEFT JOIN DimCustomers dc ON md.customer_email = dc.customer_email
-LEFT JOIN DimSellers ds ON md.seller_email = ds.seller_email
-LEFT JOIN DimProducts dp ON md.product_name = dp.product_name;
 
 
