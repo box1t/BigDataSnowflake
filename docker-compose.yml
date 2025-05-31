@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine 
+    restart: always           
+    environment:
+      POSTGRES_DB: mydatabase     
+      POSTGRES_USER: user_bd      
+      POSTGRES_PASSWORD: password_bd 
+    ports:
+      - "5432:5432"           
+    volumes:
+      - pgdata:/var/lib/postgresql/data 
+    healthcheck: 
+      test: ["CMD-SHELL", "pg_isready -U user_bd -d mydatabase"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata: 
