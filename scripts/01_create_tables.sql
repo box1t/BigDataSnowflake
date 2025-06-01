@@ -1,7 +1,7 @@
 -- scripts/01_create_tables.sql
 
 CREATE TABLE IF NOT EXISTS public.mock_data (
-    id SERIAL PRIMARY key,
+    id INTEGER,
 	customer_first_name varchar(50) NULL,
 	customer_last_name varchar(50) NULL,
 	customer_age integer NULL,

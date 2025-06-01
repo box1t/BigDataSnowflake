@@ -7,14 +7,14 @@ DB_NAME=mydatabase
 TABLE_NAME=public.mock_data
 CSV_DIR="/data_csv_for_docker"
 
+echo "Очищаю таблицу $TABLE_NAME перед загрузкой всех CSV..."
+psql -U "$DB_USER" -d "$DB_NAME" -c "TRUNCATE TABLE $TABLE_NAME RESTART IDENTITY;"
+
 for file in "$CSV_DIR"/*.csv; do
   BASENAME=$(basename "$file")
-  echo "Импортирую: $BASENAME"
-
-  echo "Очищаю таблицу перед загрузкой $BASENAME..."
-  psql -U "$DB_USER" -d "$DB_NAME" -c "TRUNCATE TABLE $TABLE_NAME RESTART IDENTITY;"
-
+  echo "Импортирую: $BASENAME в $TABLE_NAME..."
   psql -U "$DB_USER" -d "$DB_NAME" -c "\
     COPY $TABLE_NAME FROM '$file' DELIMITER ',' CSV HEADER;"
-
 done
+
+echo "Загрузка всех CSV в $TABLE_NAME завершена."
